@@ -22,14 +22,14 @@
     <div id="graphContainer" style=" width:800px; height:800px"></div>
 </body>
 <script>
-    document.addEventListener('DOMContentLoaded', () => { init_UI(); });  
+    document.addEventListener('DOMContentLoaded', () => { init_UI(); });
     let mois = ["janvier", "février", "mars", "avril", "mai", "juin", "juillet", "août", "septembre", "octobre", "novembre", "décembre"];
     let ventes = [6500, 5550, 4200, 4525, 2500, 1500, 500, 1000, 1750, 2300, 3700, 3500];
     const svgns = "http://www.w3.org/2000/svg";
     let viewPortMaxUnitX = 1000;
     let viewPortMaxUnitY = 1000;
- 
-    let viewport = null; 
+
+    let viewport = null;
     function changementPixelY(y) {
         return viewPortMaxUnitY - y;
     }
@@ -37,7 +37,7 @@
         insertViewPort("graphContainer");
         drawGraph();
     }
-   
+
     function insertViewPort(containerId) {
         viewport = document.createElementNS(svgns, "svg");
         viewport.setAttribute("id", "viewport");
@@ -118,7 +118,7 @@
                             fill = "green"
                         }
             viewport.appendChild(rect(barPos, oy, barWidth, ventes[b] / 10, fill, "black", 1));
-            viewport.appendChild(text(barPos , oy + ventes[b] / 9.8, ventes[b]+"$", 1, 1.2));
+            viewport.appendChild(text(barPos, oy + ventes[b] / 9.8, ventes[b] + "$", 1, 1.2));
             viewport.appendChild(text(barPos + barWidth / 2, oy - 30, mois[b], 45, 2));
             barPos += barWidth + 2 * barMargin;
         }
