@@ -1,0 +1,129 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <style>
+        body {
+            text-align: center;
+        }
+
+        #graphContainer {
+            margin: auto;
+            width: 50%;
+            border: 3px solid black;
+            padding: 10px;
+            border-radius: 100px;
+        }
+    </style>
+</head>
+
+<body>
+    <h1>Ventes 2022 de Kyle Delisi</h1>
+    <div id="graphContainer" style=" width:800px; height:800px"></div>
+</body>
+<script>
+    document.addEventListener('DOMContentLoaded', () => { init_UI(); });  
+    let mois = ["janvier", "février", "mars", "avril", "mai", "juin", "juillet", "août", "septembre", "octobre", "novembre", "décembre"];
+    let ventes = [6500, 5550, 4200, 4525, 2500, 1500, 500, 1000, 1750, 2300, 3700, 3500];
+    const svgns = "http://www.w3.org/2000/svg";
+    let viewPortMaxUnitX = 1000;
+    let viewPortMaxUnitY = 1000;
+ 
+    let viewport = null; 
+    function toScreen(y) {
+        return viewPortMaxUnitY - y;
+    }
+    function init_UI() {
+        insertViewPort("graphContainer");
+        drawGraph();
+    }
+   
+    function insertViewPort(containerId) {
+        viewport = document.createElementNS(svgns, "svg");
+        viewport.setAttribute("id", "viewport");
+        viewport.setAttribute("viewBox", "0 0 " + viewPortMaxUnitX + " " + viewPortMaxUnitY);
+        document.getElementById(containerId).appendChild(viewport);
+    }
+    function line(x1, y1, x2, y2, stroke, strokeWidth = 1) {
+        let line = document.createElementNS(svgns, "line");
+        line.setAttribute("x1", x1);
+        line.setAttribute("y1", toScreen(y1));
+        line.setAttribute("x2", x2);
+        line.setAttribute("y2", toScreen(y2));
+        line.setAttribute("stroke", stroke);
+        line.setAttribute("stroke-width", strokeWidth);
+        return line;
+    }
+    function rect(x, y, width, height, fill = "black", stroke, strokeWidth = 1) {
+        let rect = document.createElementNS(svgns, "rect");
+        rect.setAttribute("x", x);
+        rect.setAttribute("y", toScreen(y) - height);
+        rect.setAttribute("width", width);
+        rect.setAttribute("height", height);
+        rect.setAttribute("fill", fill);
+        rect.setAttribute("stroke", stroke);
+        rect.setAttribute("stroke-width", strokeWidth);
+        return rect;
+    }
+    function text(x, y, content, angle = 0, size = "1", family = "serif", style = "normal") {
+        let text = document.createElementNS(svgns, "text");
+        text.setAttribute("x", x);
+        text.setAttribute("y", toScreen(y));
+        text.setAttribute("transform", "rotate(" + angle + "," + x + "," + toScreen(y) + ")");
+        text.setAttribute("font-size", size + "em");
+        text.setAttribute("font-family", family);
+        text.setAttribute("style", style);
+        text.innerHTML = content;
+        return text;
+    }
+
+    function drawGraph() {
+        let fill = "black";
+        let stroke = "black";
+        let graphMarginX = 150;
+        let graphMarginY = 150;
+        let ox = graphMarginX;
+        let oy = graphMarginY;
+        let barMargin = 5;
+        let barWidth = (viewPortMaxUnitX - 2 * graphMarginX) / ventes.length - 2 * barMargin;
+        let barPos = ox + barMargin;
+
+        for (let y = 0; y < 8000; y += 1000) {
+            viewport.appendChild(line(ox - 10, oy + y / 10, viewPortMaxUnitX - graphMarginX + 10, oy + y / 10, "black"));
+
+            let label = text(ox - 20, oy + y / 10 - 10, "$ " + y, 0, 2);
+            label.setAttribute("text-anchor", "end");
+            viewport.appendChild(label);
+
+        }
+        for (let y = 0; y < 7000; y += 100) {
+            viewport.appendChild(line(ox - 10, oy + y / 10, viewPortMaxUnitX - graphMarginX + 10, oy + y / 10, "grey"));
+
+
+        }
+        for (let b = 0; b < ventes.length; b++) {
+            if (ventes[b] < 1250) {
+                fill = "red"
+            }
+            else
+                if (ventes[b] > 1250 && ventes[b] <= 2500) {
+                    fill = "orange"
+                }
+                else
+                    if (ventes[b] > 2500 && ventes[b] < 4500) {
+                        fill = "yellow"
+                    }
+                    else
+                        if (ventes[b] >= 4500) {
+                            fill = "green"
+                        }
+            viewport.appendChild(rect(barPos, oy, barWidth, ventes[b] / 10, fill, "black", 1));
+            viewport.appendChild(text(barPos , oy + ventes[b] / 9.8, ventes[b]+"$", 1, 1.2));
+            viewport.appendChild(text(barPos + barWidth / 2, oy - 30, mois[b], 45, 2));
+            barPos += barWidth + 2 * barMargin;
+        }
+
+    }
+</script>
+
+</html>
