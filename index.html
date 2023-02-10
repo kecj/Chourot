@@ -30,7 +30,7 @@
     let viewPortMaxUnitY = 1000;
  
     let viewport = null; 
-    function toScreen(y) {
+    function changementPixelY(y) {
         return viewPortMaxUnitY - y;
     }
     function init_UI() {
@@ -47,9 +47,9 @@
     function line(x1, y1, x2, y2, stroke, strokeWidth = 1) {
         let line = document.createElementNS(svgns, "line");
         line.setAttribute("x1", x1);
-        line.setAttribute("y1", toScreen(y1));
+        line.setAttribute("y1", changementPixelY(y1));
         line.setAttribute("x2", x2);
-        line.setAttribute("y2", toScreen(y2));
+        line.setAttribute("y2", changementPixelY(y2));
         line.setAttribute("stroke", stroke);
         line.setAttribute("stroke-width", strokeWidth);
         return line;
@@ -57,7 +57,7 @@
     function rect(x, y, width, height, fill = "black", stroke, strokeWidth = 1) {
         let rect = document.createElementNS(svgns, "rect");
         rect.setAttribute("x", x);
-        rect.setAttribute("y", toScreen(y) - height);
+        rect.setAttribute("y", changementPixelY(y) - height);
         rect.setAttribute("width", width);
         rect.setAttribute("height", height);
         rect.setAttribute("fill", fill);
@@ -68,8 +68,8 @@
     function text(x, y, content, angle = 0, size = "1", family = "serif", style = "normal") {
         let text = document.createElementNS(svgns, "text");
         text.setAttribute("x", x);
-        text.setAttribute("y", toScreen(y));
-        text.setAttribute("transform", "rotate(" + angle + "," + x + "," + toScreen(y) + ")");
+        text.setAttribute("y", changementPixelY(y));
+        text.setAttribute("transform", "rotate(" + angle + "," + x + "," + changementPixelY(y) + ")");
         text.setAttribute("font-size", size + "em");
         text.setAttribute("font-family", family);
         text.setAttribute("style", style);
